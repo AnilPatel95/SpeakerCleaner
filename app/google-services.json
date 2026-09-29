@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "343370762430",
+    "firebase_url": "https://shuttletechonogies.firebaseio.com",
+    "project_id": "shuttletechonogies",
+    "storage_bucket": "shuttletechonogies.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:68a39e140d7c3529ea36ef",
+        "android_client_info": {
+          "package_name": "com.shuttletechnologies.speakercleaner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
