@@ -5,5 +5,6 @@ enum class CleanMode(val defaultDurationSec: Int) {
     DUST_BLAST(45),
     QUICK_BLAST(30),
     DEEP_CLEAN(120),
+    ULTRASONIC(40),
     MANUAL_TONE(0)
 }

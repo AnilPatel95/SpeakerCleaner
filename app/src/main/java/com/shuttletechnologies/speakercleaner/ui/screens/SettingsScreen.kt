@@ -173,7 +173,7 @@ fun SettingsScreen(
         val activeLang = Locales.getLanguage(currentLangCode)
         ActionCard(
             title = "${activeLang.flagEmoji}  ${activeLang.nameNative} (${activeLang.nameEnglish})",
-            subtitle = "Tap to switch language",
+            subtitle = strings.subLanguage,
             icon = Icons.Rounded.Language,
             trailingIcon = Icons.Rounded.ChevronRight,
             onClick = {
@@ -314,7 +314,7 @@ fun SettingsScreen(
 
         ActionCard(
             title = strings.moreAppsTitle,
-            subtitle = "Explore more utilities by Shuttle Technologies",
+            subtitle = strings.moreAppsDesc,
             icon = Icons.Rounded.Apps,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -477,7 +477,7 @@ fun SettingsScreen(
                     OutlinedTextField(
                         value = pinInput,
                         onValueChange = { if (it.length <= 4) pinInput = it },
-                        placeholder = { Text("Enter 4-Digit PIN", fontSize = 12.sp) },
+                        placeholder = { Text(strings.setupPin, fontSize = 12.sp) },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = colors.accent,
@@ -491,7 +491,7 @@ fun SettingsScreen(
                     OutlinedTextField(
                         value = confirmPinInput,
                         onValueChange = { if (it.length <= 4) confirmPinInput = it },
-                        placeholder = { Text("Confirm 4-Digit PIN", fontSize = 12.sp) },
+                        placeholder = { Text(strings.confirmPin, fontSize = 12.sp) },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = colors.accent,
@@ -525,7 +525,7 @@ fun SettingsScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = colors.accent)
                 ) {
-                    Text("Save PIN", fontSize = 12.sp, color = androidx.compose.ui.graphics.Color.Black)
+                    Text(strings.btnSave, fontSize = 12.sp, color = androidx.compose.ui.graphics.Color.Black)
                 }
             },
             dismissButton = {
@@ -537,7 +537,7 @@ fun SettingsScreen(
                         pinError = null
                     }
                 ) {
-                    Text("Cancel", fontSize = 12.sp, color = colors.textMuted)
+                    Text(strings.btnCancel, fontSize = 12.sp, color = colors.textMuted)
                 }
             },
             containerColor = colors.surfaceElevated

@@ -131,7 +131,14 @@ data class StringResources(
     val unlockTitle: String,
     val enterPin: String,
     val biometricPromptTitle: String,
-    val biometricPromptSubtitle: String
+    val biometricPromptSubtitle: String,
+
+    val modeUltrasonic: String = "Ultrasonic",
+    val subLanguage: String = "Tap to switch language",
+    val moreAppsDesc: String = "Explore more utilities by Shuttle Technologies",
+    val btnSave: String = "Save PIN",
+    val btnCancel: String = "Cancel",
+    val confirmPin: String = "Confirm 4-Digit PIN"
 )
 
 val EnglishStrings = StringResources(

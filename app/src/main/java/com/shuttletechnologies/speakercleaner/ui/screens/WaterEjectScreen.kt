@@ -31,26 +31,31 @@ import androidx.compose.material.icons.rounded.Hearing
 import androidx.compose.material.icons.rounded.PhoneAndroid
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.ScreenRotation
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.WaterDrop
+import androidx.compose.material.icons.rounded.Waves
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -58,6 +63,8 @@ import androidx.compose.ui.unit.sp
 import com.shuttletechnologies.speakercleaner.audio.AcousticSynthEngine
 import com.shuttletechnologies.speakercleaner.audio.AudioOutputRouter
 import com.shuttletechnologies.speakercleaner.audio.HapticPulseManager
+import com.shuttletechnologies.speakercleaner.audio.VolumeController
+import com.shuttletechnologies.speakercleaner.sensors.TiltGravitySensor
 import com.shuttletechnologies.speakercleaner.data.CleanMode
 import com.shuttletechnologies.speakercleaner.data.CleaningSession
 import com.shuttletechnologies.speakercleaner.data.PreferencesManager
@@ -85,6 +92,11 @@ fun WaterEjectScreen(
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
+    val context = LocalContext.current
+    val volumeController = remember { VolumeController(context) }
+    val tiltSensor = remember { TiltGravitySensor(context) }
+    val tiltState by tiltSensor.tiltState.collectAsState()
+
     var selectedTarget by remember { mutableStateOf(SpeakerTarget.LOUDSPEAKER) }
     var selectedMode by remember { mutableStateOf(CleanMode.WATER_EJECT) }
     var isCleaning by remember { mutableStateOf(false) }
@@ -93,6 +105,14 @@ fun WaterEjectScreen(
     var currentFrequency by remember { mutableFloatStateOf(165f) }
     var phaseText by remember { mutableStateOf(strings.statusIdle) }
     var remainingSeconds by remember { mutableIntStateOf(selectedMode.defaultDurationSec) }
+
+    DisposableEffect(Unit) {
+        tiltSensor.startListening()
+        onDispose {
+            tiltSensor.stopListening()
+            volumeController.restoreOriginalVolume(isVoiceCall = selectedTarget == SpeakerTarget.EARPIECE)
+        }
+    }
 
     LaunchedEffect(isCleaning) {
         onActiveStateChanged(isCleaning)
@@ -103,6 +123,7 @@ fun WaterEjectScreen(
         synthEngine.stopPlayback()
         hapticManager.stopVibration()
         audioRouter.restoreOriginalRouting()
+        volumeController.restoreOriginalVolume(isVoiceCall = selectedTarget == SpeakerTarget.EARPIECE)
 
         if (completed) {
             view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
@@ -131,11 +152,12 @@ fun WaterEjectScreen(
         audioRouter.routeTo(selectedTarget)
         audioRouter.setMaxVolume()
 
+        val useVoiceCall = selectedTarget == SpeakerTarget.EARPIECE
+        volumeController.maximizeVolumeForCleaning(isVoiceCall = useVoiceCall)
+
         synthEngine.volumeLevel = 1.0f
         synthEngine.stereoPan = 0.0f
         synthEngine.noiseMode = AcousticSynthEngine.NoiseMode.NONE
-
-        val useVoiceCall = selectedTarget == SpeakerTarget.EARPIECE
         synthEngine.startPlayback(useVoiceCallStream = useVoiceCall)
 
         if (selectedMode == CleanMode.DUST_BLAST) {
@@ -204,6 +226,14 @@ fun WaterEjectScreen(
                         phaseText = "Rapid 30s Air Pulse"
                         synthEngine.waveform = WaveformType.SINE
                         val freq = 165f + ((step % 10) * 15f)
+                        currentFrequency = freq
+                        synthEngine.targetFrequency = freq
+                    }
+                    CleanMode.ULTRASONIC -> {
+                        phaseText = "Silent Ultrasonic Agitation (19.5 kHz)"
+                        synthEngine.waveform = WaveformType.SINE
+                        val cycle = (step % 20).toFloat() / 20f
+                        val freq = 18500f + (cycle * 3000f)
                         currentFrequency = freq
                         synthEngine.targetFrequency = freq
                     }
@@ -279,72 +309,97 @@ fun WaterEjectScreen(
                 .padding(bottom = 6.dp)
         )
 
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ModeChip(
-                title = strings.modeWaterEject,
-                duration = "60s",
-                icon = Icons.Rounded.WaterDrop,
-                isSelected = selectedMode == CleanMode.WATER_EJECT,
-                onClick = {
-                    if (!isCleaning) {
-                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                        selectedMode = CleanMode.WATER_EJECT
-                        remainingSeconds = 60
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ModeChip(
+                    title = strings.modeWaterEject,
+                    duration = "60s",
+                    icon = Icons.Rounded.WaterDrop,
+                    isSelected = selectedMode == CleanMode.WATER_EJECT,
+                    onClick = {
+                        if (!isCleaning) {
+                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                            selectedMode = CleanMode.WATER_EJECT
+                            remainingSeconds = 60
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-            ModeChip(
-                title = strings.modeDustBlast,
-                duration = "45s",
-                icon = Icons.Rounded.Air,
-                isSelected = selectedMode == CleanMode.DUST_BLAST,
-                onClick = {
-                    if (!isCleaning) {
-                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                        selectedMode = CleanMode.DUST_BLAST
-                        remainingSeconds = 45
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            )
+                ModeChip(
+                    title = strings.modeDustBlast,
+                    duration = "45s",
+                    icon = Icons.Rounded.Air,
+                    isSelected = selectedMode == CleanMode.DUST_BLAST,
+                    onClick = {
+                        if (!isCleaning) {
+                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                            selectedMode = CleanMode.DUST_BLAST
+                            remainingSeconds = 45
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-            ModeChip(
-                title = strings.modeDeepClean,
-                duration = "120s",
-                icon = Icons.Rounded.CleaningServices,
-                isSelected = selectedMode == CleanMode.DEEP_CLEAN,
-                onClick = {
-                    if (!isCleaning) {
-                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                        selectedMode = CleanMode.DEEP_CLEAN
-                        remainingSeconds = 120
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            )
+                ModeChip(
+                    title = strings.modeDeepClean,
+                    duration = "120s",
+                    icon = Icons.Rounded.CleaningServices,
+                    isSelected = selectedMode == CleanMode.DEEP_CLEAN,
+                    onClick = {
+                        if (!isCleaning) {
+                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                            selectedMode = CleanMode.DEEP_CLEAN
+                            remainingSeconds = 120
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
-            ModeChip(
-                title = strings.modeQuickBlast,
-                duration = "30s",
-                icon = Icons.Rounded.Bolt,
-                isSelected = selectedMode == CleanMode.QUICK_BLAST,
-                onClick = {
-                    if (!isCleaning) {
-                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                        selectedMode = CleanMode.QUICK_BLAST
-                        remainingSeconds = 30
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ModeChip(
+                    title = strings.modeQuickBlast,
+                    duration = "30s",
+                    icon = Icons.Rounded.Bolt,
+                    isSelected = selectedMode == CleanMode.QUICK_BLAST,
+                    onClick = {
+                        if (!isCleaning) {
+                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                            selectedMode = CleanMode.QUICK_BLAST
+                            remainingSeconds = 30
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+
+                ModeChip(
+                    title = strings.modeUltrasonic,
+                    duration = "40s",
+                    icon = Icons.Rounded.Waves,
+                    isSelected = selectedMode == CleanMode.ULTRASONIC,
+                    onClick = {
+                        if (!isCleaning) {
+                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                            selectedMode = CleanMode.ULTRASONIC
+                            remainingSeconds = 40
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Circular Acoustic Water Ejection Gauge
         AcousticGauge(
@@ -365,9 +420,51 @@ fun WaterEjectScreen(
                 fontWeight = FontWeight.SemiBold,
                 color = colors.accent
             )
+            Spacer(modifier = Modifier.height(6.dp))
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        // Interactive Gravity Tilt & Orientation Guide
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(
+                    if (tiltState.isOptimalAngle) colors.success.copy(alpha = 0.16f)
+                    else colors.surfaceElevated
+                )
+                .border(
+                    width = 1.dp,
+                    color = if (tiltState.isOptimalAngle) colors.success.copy(alpha = 0.6f) else colors.border.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .padding(horizontal = 14.dp, vertical = 9.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = if (tiltState.isOptimalAngle) Icons.Rounded.CheckCircle else Icons.Rounded.ScreenRotation,
+                    contentDescription = null,
+                    tint = if (tiltState.isOptimalAngle) colors.success else colors.accent,
+                    modifier = Modifier.size(17.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = if (tiltState.isOptimalAngle) {
+                        "Gravity Assist: Optimal Downward Ejection Angle (${tiltState.pitchDeg.toInt()}° ✓)"
+                    } else {
+                        "Gravity Guide: Hold Screen-Down 45° for Best Drainage"
+                    },
+                    fontSize = 11.sp,
+                    fontWeight = if (tiltState.isOptimalAngle) FontWeight.Bold else FontWeight.Medium,
+                    color = if (tiltState.isOptimalAngle) colors.success else colors.textMuted
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Primary Start / Stop CTA Button
         Button(
