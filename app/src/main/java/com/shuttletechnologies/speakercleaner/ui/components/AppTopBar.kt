@@ -82,28 +82,27 @@ fun AppTopBar(
             }
         },
         actions = {
-            Box(
-                modifier = Modifier
-                    .padding(end = 12.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(
-                        if (isCleaningActive) colors.accent.copy(alpha = 0.22f)
-                        else colors.accent.copy(alpha = 0.15f)
+            if (isCleaningActive) {
+                Box(
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(colors.accent.copy(alpha = 0.22f))
+                        .border(
+                            width = 1.dp,
+                            color = colors.accent,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = strings.badgeActive,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.accent,
+                        letterSpacing = 0.5.sp
                     )
-                    .border(
-                        width = 1.dp,
-                        color = if (isCleaningActive) colors.accent else colors.accent.copy(alpha = 0.4f),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
-            ) {
-                Text(
-                    text = if (isCleaningActive) strings.badgeActive else strings.badgePro,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = colors.accent,
-                    letterSpacing = 0.5.sp
-                )
+                }
             }
         }
     )

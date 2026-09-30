@@ -40,7 +40,6 @@ import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Nightlight
-import androidx.compose.material.icons.rounded.Policy
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.AlertDialog
@@ -320,18 +319,6 @@ fun SettingsScreen(
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 launchDeveloperPage(context)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        ActionCard(
-            title = strings.privacyPolicyTitle,
-            subtitle = "https://shuttletechonogies.web.app/speakercleaner/privacy_policy.html",
-            icon = Icons.Rounded.Policy,
-            onClick = {
-                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                launchPrivacyPolicy(context)
             }
         )
 
@@ -720,17 +707,6 @@ private fun launchDeveloperPage(context: Context) {
         val intent = Intent(
             Intent.ACTION_VIEW,
             Uri.parse("https://play.google.com/store/apps/developer?id=shuttletechnologies")
-        )
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    } catch (_: Exception) {}
-}
-
-private fun launchPrivacyPolicy(context: Context) {
-    try {
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://shuttletechonogies.web.app/speakercleaner/privacy_policy.html")
         )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
