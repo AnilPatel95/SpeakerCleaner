@@ -55,9 +55,9 @@ android {
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
-            manifestPlaceholders["admobAppId"] = "ca-app-pub-5626817105654582~2189243662"
-            buildConfigField("String", "NATIVE_AD_UNIT_ID", "\"ca-app-pub-5626817105654582/1166181892\"")
-            buildConfigField("String", "BANNER_AD_UNIT_ID", "\"ca-app-pub-5626817105654582/9315579748\"")
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-5626817105654582~2313342064"
+            buildConfigField("String", "NATIVE_AD_UNIT_ID", "\"ca-app-pub-5626817105654582/2712797313\"")
+            buildConfigField("String", "BANNER_AD_UNIT_ID", "\"ca-app-pub-5626817105654582/8778588773\"")
         }
         debug {
             isMinifyEnabled = false
