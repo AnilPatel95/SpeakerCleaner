@@ -105,6 +105,7 @@ fun SettingsScreen(
     var pinInput by remember { mutableStateOf("") }
     var confirmPinInput by remember { mutableStateOf("") }
     var pinError by remember { mutableStateOf<String?>(null) }
+    var pendingBiometricToggle by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -215,7 +216,7 @@ fun SettingsScreen(
                         color = colors.textPrimary
                     )
                     Text(
-                        text = if (prefs.hasPinConfigured()) "PIN is active" else "Setup a 4-digit PIN",
+                        text = if (prefs.hasPinConfigured()) strings.pinIsActive else strings.setup4DigitPin,
                         fontSize = 10.sp,
                         color = colors.textMuted
                     )
@@ -224,10 +225,16 @@ fun SettingsScreen(
                     checked = isSecurityEnabled,
                     onCheckedChange = { checked ->
                         view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                        if (checked && !prefs.hasPinConfigured()) {
-                            showPinDialog = true
+                        if (checked) {
+                            if (!prefs.hasPinConfigured()) {
+                                pendingBiometricToggle = false
+                                showPinDialog = true
+                            } else {
+                                prefs.setSecurityEnabled(true)
+                            }
                         } else {
-                            prefs.setSecurityEnabled(checked)
+                            prefs.setSecurityEnabled(false)
+                            prefs.setBiometricEnabled(false)
                         }
                     },
                     colors = SwitchDefaults.colors(
@@ -259,7 +266,7 @@ fun SettingsScreen(
                         color = colors.textPrimary
                     )
                     Text(
-                        text = "Unlock with fingerprint or face",
+                        text = strings.unlockWithBiometrics,
                         fontSize = 10.sp,
                         color = colors.textMuted
                     )
@@ -268,10 +275,16 @@ fun SettingsScreen(
                     checked = isBiometricEnabled,
                     onCheckedChange = { checked ->
                         view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                        if (checked && !prefs.hasPinConfigured()) {
-                            showPinDialog = true
+                        if (checked) {
+                            if (!prefs.hasPinConfigured()) {
+                                pendingBiometricToggle = true
+                                showPinDialog = true
+                            } else {
+                                prefs.setBiometricEnabled(true)
+                                prefs.setSecurityEnabled(true)
+                            }
                         } else {
-                            prefs.setBiometricEnabled(checked)
+                            prefs.setBiometricEnabled(false)
                         }
                     },
                     colors = SwitchDefaults.colors(
@@ -306,7 +319,7 @@ fun SettingsScreen(
             icon = Icons.Rounded.Email,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                sendFeedbackEmail(context, strings.copiedFeedback)
+                sendFeedbackEmail(context, strings.supportEmail, strings.copiedFeedback)
             }
         )
 
@@ -340,7 +353,7 @@ fun SettingsScreen(
                 color = colors.textMuted
             )
             Text(
-                text = "Shuttle Technologies © 2026",
+                text = strings.companyCopyright,
                 fontSize = 10.sp,
                 color = colors.textMuted.copy(alpha = 0.7f)
             )
@@ -387,7 +400,7 @@ fun SettingsScreen(
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text(text = "Search language...", fontSize = 12.sp, color = colors.textMuted) },
+                    placeholder = { Text(text = strings.searchLanguage, fontSize = 12.sp, color = colors.textMuted) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Search,
@@ -510,13 +523,17 @@ fun SettingsScreen(
                 Button(
                     onClick = {
                         if (pinInput.length != 4) {
-                            pinError = "PIN must be exactly 4 digits"
+                            pinError = strings.pinMustBe4Digits
                         } else if (pinInput != confirmPinInput) {
-                            pinError = "PINs do not match"
+                            pinError = strings.pinsDoNotMatch
                         } else {
                             view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                             prefs.setPin(pinInput)
                             prefs.setSecurityEnabled(true)
+                            if (pendingBiometricToggle) {
+                                prefs.setBiometricEnabled(true)
+                                pendingBiometricToggle = false
+                            }
                             showPinDialog = false
                             pinInput = ""
                             confirmPinInput = ""
@@ -532,6 +549,7 @@ fun SettingsScreen(
                 TextButton(
                     onClick = {
                         showPinDialog = false
+                        pendingBiometricToggle = false
                         pinInput = ""
                         confirmPinInput = ""
                         pinError = null
@@ -687,7 +705,7 @@ private fun launchPlayStore(context: Context) {
     }
 }
 
-private fun sendFeedbackEmail(context: Context, copiedMsg: String) {
+private fun sendFeedbackEmail(context: Context, label: String, copiedMsg: String) {
     val email = "ved.om9563@gmail.com"
     try {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -697,7 +715,7 @@ private fun sendFeedbackEmail(context: Context, copiedMsg: String) {
         context.startActivity(intent)
     } catch (_: Exception) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.setPrimaryClip(ClipData.newPlainText("Support Email", email))
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, email))
         Toast.makeText(context, copiedMsg, Toast.LENGTH_SHORT).show()
     }
 }

@@ -84,19 +84,19 @@ fun HistoryScreen(
         ) {
             StatCard(
                 title = strings.statTotalCleans,
-                value = "$totalCleans",
+                value = totalCleans.toString(),
                 icon = Icons.Rounded.CleaningServices,
                 modifier = Modifier.weight(1f)
             )
             StatCard(
                 title = strings.statWaterCleans,
-                value = "$waterCleans",
+                value = waterCleans.toString(),
                 icon = Icons.Rounded.WaterDrop,
                 modifier = Modifier.weight(1f)
             )
             StatCard(
                 title = strings.statDustCleans,
-                value = "$dustCleans",
+                value = dustCleans.toString(),
                 icon = Icons.Rounded.Air,
                 modifier = Modifier.weight(1f)
             )
@@ -214,6 +214,7 @@ private fun StatCard(
 @Composable
 private fun SessionItemCard(session: CleaningSession) {
     val colors = LocalAppColors.current
+    val strings = appStrings()
     val dateStr = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault()).format(Date(session.timestamp))
 
     val icon = when (session.mode) {
@@ -250,7 +251,7 @@ private fun SessionItemCard(session: CleaningSession) {
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = "${session.mode.name.replace("_", " ")} (${session.target.displayName})",
+                text = "${session.mode.getLocalizedName(strings)} (${session.target.getLocalizedName(strings)})",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = colors.textPrimary
@@ -269,7 +270,7 @@ private fun SessionItemCard(session: CleaningSession) {
                 .padding(horizontal = 8.dp, vertical = 3.dp)
         ) {
             Text(
-                text = "✓ OK",
+                text = strings.statusOk,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 color = colors.success

@@ -53,7 +53,7 @@
         <service
             android:name=".service.WaterEjectTileService"
             android:icon="@drawable/ic_launcher_foreground"
-            android:label="Water Eject"
+            android:label="@string/quick_tile_water_eject"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
             <intent-filter>

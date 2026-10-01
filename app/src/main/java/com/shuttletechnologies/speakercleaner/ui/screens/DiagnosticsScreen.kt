@@ -299,7 +299,7 @@ fun DiagnosticsScreen(
         // 3. Acoustic Burn-In Noise
         DiagnosticCard(
             title = strings.diagNoiseTitle,
-            description = "High-efficiency acoustic noise to exercise diaphragm suspension and disperse trapped debris.",
+            description = strings.acousticBurnInDesc,
             icon = Icons.AutoMirrored.Rounded.VolumeUp
         ) {
             Row(
@@ -408,7 +408,7 @@ fun DiagnosticsScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     DiagPillButton(
-                        label = if (beforeDb != null) "Before: ${beforeDb?.toInt()} dB" else strings.recordBefore,
+                        label = if (beforeDb != null) strings.recordBeforeFormat.format(beforeDb?.toInt()) else strings.recordBefore,
                         isSelected = beforeDb != null,
                         onClick = {
                             view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -418,7 +418,7 @@ fun DiagnosticsScreen(
                     )
 
                     DiagPillButton(
-                        label = if (afterDb != null) "After: ${afterDb?.toInt()} dB" else strings.recordAfter,
+                        label = if (afterDb != null) strings.recordAfterFormat.format(afterDb?.toInt()) else strings.recordAfter,
                         isSelected = afterDb != null,
                         onClick = {
                             view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -440,7 +440,7 @@ fun DiagnosticsScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Acoustic Output Improved by +${"%.1f".format(improvement)} dB ✓",
+                            text = strings.outputImprovedBy.format(improvement),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = colors.success

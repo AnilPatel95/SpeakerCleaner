@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,7 +59,7 @@ fun PinVaultLockScreen(
 
     var enteredPin by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val isBiometricEnabled = prefs.isBiometricEnabled.value
+    val isBiometricEnabled by prefs.isBiometricEnabled.collectAsState()
 
     fun triggerBiometrics() {
         val activity = context as? FragmentActivity ?: return
@@ -74,25 +76,65 @@ fun PinVaultLockScreen(
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
+                    if (errorCode != BiometricPrompt.ERROR_USER_CANCELED &&
+                        errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON &&
+                        errorCode != BiometricPrompt.ERROR_CANCELED) {
+                        errorMessage = errString.toString()
+                    }
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    view.performHapticFeedback(HapticFeedbackConstants.REJECT)
                 }
             }
         )
 
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+        val biometricManager = BiometricManager.from(context)
+        val canStrongOrCred = biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        ) == BiometricManager.BIOMETRIC_SUCCESS
+
+        val canStrong = biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG
+        ) == BiometricManager.BIOMETRIC_SUCCESS
+
+        val canWeak = biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_WEAK
+        ) == BiometricManager.BIOMETRIC_SUCCESS
+
+        val promptInfoBuilder = BiometricPrompt.PromptInfo.Builder()
             .setTitle(strings.biometricPromptTitle)
             .setSubtitle(strings.biometricPromptSubtitle)
-            .setAllowedAuthenticators(
-                BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                        BiometricManager.Authenticators.DEVICE_CREDENTIAL
-            )
-            .build()
+
+        val promptInfo = if (canStrongOrCred) {
+            promptInfoBuilder
+                .setAllowedAuthenticators(
+                    BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                )
+                .build()
+        } else if (canStrong) {
+            promptInfoBuilder
+                .setNegativeButtonText(strings.enterPin)
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+                .build()
+        } else if (canWeak) {
+            promptInfoBuilder
+                .setNegativeButtonText(strings.enterPin)
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                .build()
+        } else {
+            promptInfoBuilder
+                .setNegativeButtonText(strings.enterPin)
+                .build()
+        }
 
         try {
             prompt.authenticate(promptInfo)
         } catch (_: Exception) {}
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isBiometricEnabled) {
         if (isBiometricEnabled) {
             triggerBiometrics()
         }
@@ -143,7 +185,7 @@ fun PinVaultLockScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Lock,
-                    contentDescription = "Lock",
+                    contentDescription = null,
                     tint = colors.accent,
                     modifier = Modifier.size(36.dp)
                 )
@@ -213,12 +255,13 @@ fun PinVaultLockScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Fingerprint,
-                        contentDescription = "Biometric",
+                        contentDescription = null,
                         tint = colors.accent,
                         modifier = Modifier.size(18.dp)
                     )
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = " Tap for Biometric",
+                        text = strings.tapForBiometric,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = colors.accent
@@ -255,7 +298,7 @@ fun PinVaultLockScreen(
                                     if (isBiometricEnabled) {
                                         Icon(
                                             imageVector = Icons.Rounded.Fingerprint,
-                                            contentDescription = "Biometric",
+                                            contentDescription = strings.biometricUnlock,
                                             tint = colors.accent,
                                             modifier = Modifier.size(28.dp)
                                         )
@@ -273,7 +316,7 @@ fun PinVaultLockScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Rounded.Backspace,
-                                        contentDescription = "Delete",
+                                        contentDescription = strings.deleteKey,
                                         tint = colors.textSecondary,
                                         modifier = Modifier.size(24.dp)
                                     )

@@ -76,8 +76,10 @@ class MainActivity : FragmentActivity() {
             val themeMode by prefs.themeMode.collectAsState()
             val languageCode by prefs.languageCode.collectAsState()
             val isSecurityEnabled by prefs.isSecurityEnabled.collectAsState()
+            val isBiometricEnabled by prefs.isBiometricEnabled.collectAsState()
+            val isLockRequired = isSecurityEnabled || isBiometricEnabled
 
-            var isUnlocked by remember { mutableStateOf(!isSecurityEnabled) }
+            var isUnlocked by remember { mutableStateOf(!isLockRequired) }
             var currentTab by remember { mutableIntStateOf(0) }
             var showExitDialog by remember { mutableStateOf(false) }
             var isAudioActive by remember { mutableStateOf(false) }
@@ -97,7 +99,7 @@ class MainActivity : FragmentActivity() {
                 CompositionLocalProvider(LocalAppStrings provides strings) {
                     val colors = LocalAppColors.current
 
-                    if (isSecurityEnabled && !isUnlocked) {
+                    if (isLockRequired && !isUnlocked) {
                         PinVaultLockScreen(
                             prefs = prefs,
                             onUnlocked = { isUnlocked = true }

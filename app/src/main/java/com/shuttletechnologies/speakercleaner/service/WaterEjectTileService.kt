@@ -6,6 +6,7 @@ import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.shuttletechnologies.speakercleaner.MainActivity
+import com.shuttletechnologies.speakercleaner.R
 
 class WaterEjectTileService : TileService() {
 
@@ -13,8 +14,8 @@ class WaterEjectTileService : TileService() {
         super.onStartListening()
         val tile = qsTile ?: return
         tile.state = Tile.STATE_INACTIVE
-        tile.label = "Water Eject"
-        tile.contentDescription = "Quick Water Ejector"
+        tile.label = getString(R.string.quick_tile_water_eject)
+        tile.contentDescription = getString(R.string.quick_tile_water_eject_desc)
         tile.updateTile()
     }
 

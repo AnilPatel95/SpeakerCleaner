@@ -88,7 +88,7 @@ fun ExitRateDialog(
                 repeat(5) {
                     Icon(
                         imageVector = Icons.Rounded.Star,
-                        contentDescription = "Star",
+                        contentDescription = null,
                         tint = colors.warning,
                         modifier = Modifier.padding(horizontal = 2.dp)
                     )

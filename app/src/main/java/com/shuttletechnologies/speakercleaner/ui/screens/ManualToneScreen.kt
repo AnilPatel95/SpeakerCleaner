@@ -238,7 +238,7 @@ fun ManualToneScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = wave.displayName,
+                        text = wave.getLocalizedName(strings),
                         fontSize = 11.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         color = if (isSelected) colors.accent else colors.textSecondary
@@ -265,7 +265,7 @@ fun ManualToneScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             PresetChip(
-                label = "165 Hz (Water)",
+                label = strings.presetWaterShort,
                 isSelected = frequency.toInt() == 165,
                 onClick = {
                     view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -278,7 +278,7 @@ fun ManualToneScreen(
             )
 
             PresetChip(
-                label = "440 Hz (Pitch)",
+                label = strings.presetPitchShort,
                 isSelected = frequency.toInt() == 440,
                 onClick = {
                     view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -289,7 +289,7 @@ fun ManualToneScreen(
             )
 
             PresetChip(
-                label = "1 kHz (Clean)",
+                label = strings.presetCleanShort,
                 isSelected = frequency.toInt() == 1000,
                 onClick = {
                     view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)

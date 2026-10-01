@@ -44,13 +44,18 @@ class PreferencesManager(context: Context) {
     fun setSecurityEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_SECURITY_ENABLED, enabled).apply()
         _isSecurityEnabled.value = enabled
+        if (!enabled && _isBiometricEnabled.value) {
+            prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED, false).apply()
+            _isBiometricEnabled.value = false
+        }
     }
 
     fun setBiometricEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED, enabled).apply()
         _isBiometricEnabled.value = enabled
         if (enabled && !_isSecurityEnabled.value) {
-            setSecurityEnabled(true)
+            prefs.edit().putBoolean(KEY_SECURITY_ENABLED, true).apply()
+            _isSecurityEnabled.value = true
         }
     }
 

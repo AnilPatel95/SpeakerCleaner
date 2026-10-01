@@ -1,6 +1,13 @@
 package com.shuttletechnologies.speakercleaner.data
 
-enum class SpeakerTarget(val displayName: String) {
-    LOUDSPEAKER("Main Loudspeaker"),
-    EARPIECE("Ear Speaker (Call Receiver)")
+import com.shuttletechnologies.speakercleaner.localization.StringResources
+
+enum class SpeakerTarget {
+    LOUDSPEAKER,
+    EARPIECE;
+
+    fun getLocalizedName(strings: StringResources): String = when (this) {
+        LOUDSPEAKER -> strings.targetLoudspeakerFull
+        EARPIECE -> strings.targetEarpieceFull
+    }
 }

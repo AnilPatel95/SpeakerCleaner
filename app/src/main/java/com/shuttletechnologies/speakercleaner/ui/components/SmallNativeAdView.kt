@@ -55,6 +55,7 @@ fun SmallNativeAdView(
 
     val context = LocalContext.current
     val colors = LocalAppColors.current
+    val strings = com.shuttletechnologies.speakercleaner.localization.appStrings()
 
     var nativeAd by remember { mutableStateOf<NativeAd?>(null) }
     var loadFailed by remember { mutableStateOf(false) }
@@ -96,11 +97,11 @@ fun SmallNativeAdView(
                 factory = { ctx ->
                     val inflater = LayoutInflater.from(ctx)
                     val adView = inflater.inflate(R.layout.layout_small_native_ad, null) as NativeAdView
-                    populateAndStyleNativeAd(adView, currentAd, colors)
+                    populateAndStyleNativeAd(adView, currentAd, colors, strings)
                     adView
                 },
                 update = { adView ->
-                    populateAndStyleNativeAd(adView, currentAd, colors)
+                    populateAndStyleNativeAd(adView, currentAd, colors, strings)
                 }
             )
         } else {
@@ -122,7 +123,8 @@ fun SmallNativeAdView(
 private fun populateAndStyleNativeAd(
     adView: NativeAdView,
     nativeAd: NativeAd,
-    colors: AppColorScheme
+    colors: AppColorScheme,
+    strings: com.shuttletechnologies.speakercleaner.localization.StringResources
 ) {
     // Style Container Background
     val density = adView.context.resources.displayMetrics.density
@@ -143,19 +145,19 @@ private fun populateAndStyleNativeAd(
 
     // Headline
     val headlineView = adView.findViewById<TextView>(R.id.ad_headline)
-    headlineView.text = nativeAd.headline ?: "Sponsor"
+    headlineView.text = nativeAd.headline ?: strings.adSponsorFallback
     headlineView.setTextColor(colors.textPrimary.toArgb())
     adView.headlineView = headlineView
 
     // Secondary / Body
     val bodyView = adView.findViewById<TextView>(R.id.ad_body)
-    bodyView.text = nativeAd.body ?: nativeAd.advertiser ?: "Promoted by Google"
+    bodyView.text = nativeAd.body ?: nativeAd.advertiser ?: strings.adPromotedFallback
     bodyView.setTextColor(colors.textMuted.toArgb())
     adView.bodyView = bodyView
 
     // Call To Action Button
     val ctaView = adView.findViewById<Button>(R.id.ad_call_to_action)
-    ctaView.text = nativeAd.callToAction ?: "LEARN MORE"
+    ctaView.text = nativeAd.callToAction ?: strings.adCtaFallback
     val ctaBg = GradientDrawable().apply {
         cornerRadius = 18f * density
         setColor(colors.accent.toArgb())

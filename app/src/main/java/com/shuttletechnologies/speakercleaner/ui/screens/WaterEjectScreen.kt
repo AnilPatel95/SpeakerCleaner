@@ -214,7 +214,7 @@ fun WaterEjectScreen(
                         }
                     }
                     CleanMode.DUST_BLAST -> {
-                        phaseText = "High-Energy Ultrasonic Sonic Agitation"
+                        phaseText = strings.phaseUltrasonicAgitation
                         synthEngine.waveform = WaveformType.SQUARE
                         // Rapid frequency oscillation 300 - 2400 Hz
                         val cycle = (step % 20).toFloat() / 20f
@@ -223,14 +223,14 @@ fun WaterEjectScreen(
                         synthEngine.targetFrequency = freq
                     }
                     CleanMode.QUICK_BLAST -> {
-                        phaseText = "Rapid 30s Air Pulse"
+                        phaseText = strings.phaseRapidAirPulse
                         synthEngine.waveform = WaveformType.SINE
                         val freq = 165f + ((step % 10) * 15f)
                         currentFrequency = freq
                         synthEngine.targetFrequency = freq
                     }
                     CleanMode.ULTRASONIC -> {
-                        phaseText = "Silent Ultrasonic Agitation (19.5 kHz)"
+                        phaseText = strings.phaseSilentUltrasonic
                         synthEngine.waveform = WaveformType.SINE
                         val cycle = (step % 20).toFloat() / 20f
                         val freq = 18500f + (cycle * 3000f)
@@ -300,7 +300,7 @@ fun WaterEjectScreen(
 
         // Cleaning Mode Selector
         Text(
-            text = "Cleaning Mode",
+            text = strings.cleaningMode,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.textMuted,
@@ -453,9 +453,9 @@ fun WaterEjectScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = if (tiltState.isOptimalAngle) {
-                        "Gravity Assist: Optimal Downward Ejection Angle (${tiltState.pitchDeg.toInt()}° ✓)"
+                        strings.gravityAssistOptimal.format(tiltState.pitchDeg.toInt())
                     } else {
-                        "Gravity Guide: Hold Screen-Down 45° for Best Drainage"
+                        strings.gravityGuideInstruction
                     },
                     fontSize = 11.sp,
                     fontWeight = if (tiltState.isOptimalAngle) FontWeight.Bold else FontWeight.Medium,

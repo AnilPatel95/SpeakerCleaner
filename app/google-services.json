@@ -8,9 +8,298 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:343370762430:android:68a39e140d7c3529ea36ef",
+        "mobilesdk_app_id": "1:343370762430:android:51d4e64b04d49f7fea36ef",
+        "android_client_info": {
+          "package_name": "com.addash.revenue.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343370762430-9c58p3b2hmue47eqjjhrdgd2k44fet54.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.addash.revenue.android",
+            "certificate_hash": "2f9583121b23567c513fa406275ab4eae2e44d8f"
+          }
+        },
+        {
+          "client_id": "343370762430-goteib4pjqo4jclhmpnc2sve6u2l23o5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.addash.revenue.android",
+            "certificate_hash": "6a81c475996ad2d225af59c4589787965f6506ff"
+          }
+        },
+        {
+          "client_id": "343370762430-jqfsv1lrhce8m98rttgg1gtp2i1nk7oh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.addash.revenue.android",
+            "certificate_hash": "208ea9d2051a589e6a36a50ad3561e82e67992d6"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:36abfd33ef26d949ea36ef",
+        "android_client_info": {
+          "package_name": "com.appvault.android.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:8e8245f5edcc0500ea36ef",
+        "android_client_info": {
+          "package_name": "com.finance.toolkit.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:ee7d1aa5eaf617aeea36ef",
+        "android_client_info": {
+          "package_name": "com.netspeed.monitor.lite.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:1cb9dd418e3b3b1dea36ef",
+        "android_client_info": {
+          "package_name": "com.patrimoinevie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:42be7b3a92ea6541ea36ef",
+        "android_client_info": {
+          "package_name": "com.shuttletechnologies.chargewatt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:f4a226724c7d1598ea36ef",
+        "android_client_info": {
+          "package_name": "com.shuttletechnologies.satellitelocator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:56e93fa9eebda828ea36ef",
         "android_client_info": {
           "package_name": "com.shuttletechnologies.speakercleaner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:b756e0e3c9fa4220ea36ef",
+        "android_client_info": {
+          "package_name": "com.simplesipcalculator.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:91f3691196eea17bea36ef",
+        "android_client_info": {
+          "package_name": "com.spaViewpagercal.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:6a9012a1852436edea36ef",
+        "android_client_info": {
+          "package_name": "com.stockprofitaveragecalculator.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiLbhieko389mBGJjcWJItsr4O30Yca_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343370762430-3gbk0ves9s42ekjili8t1r9lr0i6b393.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343370762430:android:7eccc8a60893c302ea36ef",
+        "android_client_info": {
+          "package_name": "com.wifisecurity.devicedetector"
         }
       },
       "oauth_client": [],

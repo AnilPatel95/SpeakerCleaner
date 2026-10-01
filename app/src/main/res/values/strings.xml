@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Speaker Cleaner</string>
+    <string name="quick_tile_water_eject">Water Eject</string>
+    <string name="quick_tile_water_eject_desc">Quick Water Ejector</string>
 </resources>

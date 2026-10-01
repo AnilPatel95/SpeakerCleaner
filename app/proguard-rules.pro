@@ -52,3 +52,7 @@
 -keepclassmembernames class kotlinx.coroutines.** {
     volatile <fields>;
 }
+
+# Firebase Crashlytics
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception

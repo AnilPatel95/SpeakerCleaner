@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Google Mobile Ads Ad Services Configuration -->
+<ad-services-config>
+    <!-- This configuration is required for Google Mobile Ads SDK 23.0.0+ -->
+    <!-- It enables Privacy Sandbox features and ad measurement -->
+</ad-services-config>
