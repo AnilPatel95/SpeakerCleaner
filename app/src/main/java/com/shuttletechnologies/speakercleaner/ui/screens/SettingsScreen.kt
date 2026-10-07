@@ -41,6 +41,7 @@ import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Nightlight
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -114,56 +115,66 @@ fun SettingsScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Theme Selector Section (4-Tier Modern Chips)
+        // 1. Theme Selector Section (2x2 Grid with Perfect Icon & Text Alignment)
         SectionHeader(title = strings.settingsThemeTitle)
 
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ThemeChip(
-                title = strings.themeSystem,
-                icon = Icons.Rounded.BrightnessAuto,
-                isSelected = currentThemeMode == 0,
-                onClick = {
-                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    prefs.setThemeMode(0)
-                },
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ThemeChip(
+                    title = strings.themeSystem,
+                    icon = Icons.Rounded.BrightnessAuto,
+                    isSelected = currentThemeMode == 0,
+                    onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        prefs.setThemeMode(0)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-            ThemeChip(
-                title = strings.themeDarkStudio,
-                icon = Icons.Rounded.Nightlight,
-                isSelected = currentThemeMode == 1,
-                onClick = {
-                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    prefs.setThemeMode(1)
-                },
-                modifier = Modifier.weight(1f)
-            )
+                ThemeChip(
+                    title = strings.themeDarkStudio,
+                    icon = Icons.Rounded.Nightlight,
+                    isSelected = currentThemeMode == 1,
+                    onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        prefs.setThemeMode(1)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
-            ThemeChip(
-                title = strings.themeAmoled,
-                icon = Icons.Rounded.DarkMode,
-                isSelected = currentThemeMode == 2,
-                onClick = {
-                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    prefs.setThemeMode(2)
-                },
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ThemeChip(
+                    title = strings.themeAmoled,
+                    icon = Icons.Rounded.DarkMode,
+                    isSelected = currentThemeMode == 2,
+                    onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        prefs.setThemeMode(2)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-            ThemeChip(
-                title = strings.themeLight,
-                icon = Icons.Rounded.LightMode,
-                isSelected = currentThemeMode == 3,
-                onClick = {
-                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    prefs.setThemeMode(3)
-                },
-                modifier = Modifier.weight(1f)
-            )
+                ThemeChip(
+                    title = strings.themeLight,
+                    icon = Icons.Rounded.LightMode,
+                    isSelected = currentThemeMode == 3,
+                    onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        prefs.setThemeMode(3)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(18.dp))
@@ -308,6 +319,19 @@ fun SettingsScreen(
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                 launchPlayStore(context)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ActionCard(
+            title = strings.shareAppTitle,
+            subtitle = strings.shareAppDesc,
+            icon = Icons.Rounded.Share,
+            iconTint = colors.accentSecondary,
+            onClick = {
+                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                shareApp(context, strings.appName, strings.shareAppTitle, strings.shareAppMessage)
             }
         )
 
@@ -589,39 +613,60 @@ private fun ThemeChip(
 
     val bgColor by animateColorAsState(
         targetValue = if (isSelected) colors.accent.copy(alpha = 0.18f) else colors.surfaceElevated,
-        animationSpec = tween(200),
+        animationSpec = tween(220),
         label = "theme_bg"
     )
 
-    Column(
+    val borderColor by animateColorAsState(
+        targetValue = if (isSelected) colors.accent else colors.border.copy(alpha = 0.5f),
+        animationSpec = tween(220),
+        label = "theme_border"
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = if (isSelected) colors.accent else colors.textPrimary,
+        animationSpec = tween(220),
+        label = "theme_content"
+    )
+
+    Row(
         modifier = modifier
-            .height(64.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .height(50.dp)
+            .clip(RoundedCornerShape(14.dp))
             .background(bgColor)
             .border(
                 if (isSelected) 1.5.dp else 1.dp,
-                if (isSelected) colors.accent else colors.border.copy(alpha = 0.5f),
-                RoundedCornerShape(12.dp)
+                borderColor,
+                RoundedCornerShape(14.dp)
             )
             .clickable(onClick = onClick)
-            .padding(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .padding(horizontal = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         Icon(
             imageVector = icon,
             contentDescription = title,
             tint = if (isSelected) colors.accent else colors.textMuted,
-            modifier = Modifier.size(18.dp)
+            modifier = Modifier.size(20.dp)
         )
-        Spacer(modifier = Modifier.height(3.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = title,
-            fontSize = 9.sp,
+            fontSize = 12.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = if (isSelected) colors.accent else colors.textPrimary,
+            color = contentColor,
             maxLines = 1
         )
+        if (isSelected) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .clip(CircleShape)
+                    .background(colors.accent)
+            )
+        }
     }
 }
 
@@ -728,5 +773,23 @@ private fun launchDeveloperPage(context: Context) {
         )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
+    } catch (_: Exception) {}
+}
+
+private fun shareApp(context: Context, appName: String, chooserTitle: String, shareMessage: String) {
+    val packageName = context.packageName
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_SUBJECT, appName)
+        putExtra(
+            Intent.EXTRA_TEXT,
+            "$shareMessage\nhttps://play.google.com/store/apps/details?id=$packageName"
+        )
+        type = "text/plain"
+    }
+    try {
+        val shareIntent = Intent.createChooser(sendIntent, chooserTitle)
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(shareIntent)
     } catch (_: Exception) {}
 }

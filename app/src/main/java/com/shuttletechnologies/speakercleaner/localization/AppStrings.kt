@@ -179,7 +179,10 @@ data class StringResources(
     val companyCopyright: String = "Shuttle Technologies © 2026",
     val presetWaterShort: String = "165 Hz (Water)",
     val presetPitchShort: String = "440 Hz (Pitch)",
-    val presetCleanShort: String = "1 kHz (Clean)"
+    val presetCleanShort: String = "1 kHz (Clean)",
+    val shareAppTitle: String = "Share App",
+    val shareAppDesc: String = "Share Speaker Cleaner with friends and family",
+    val shareAppMessage: String = "Clean water, moisture, and dust from your smartphone speakers using calibrated acoustic sound waves! Download Speaker Cleaner:"
 )
 
 val EnglishStrings = StringResources(
