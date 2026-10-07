@@ -40,7 +40,7 @@ android {
         applicationId = "com.shuttletechnologies.speakercleaner"
         minSdk = 24
         targetSdk = 36
-        versionCode = 10
+        versionCode = 15
         versionName = "1.0.1"
 
         manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
