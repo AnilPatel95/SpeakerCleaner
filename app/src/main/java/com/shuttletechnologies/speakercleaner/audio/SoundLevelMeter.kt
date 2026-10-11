@@ -45,19 +45,25 @@ class SoundLevelMeter(private val context: Context) {
     fun startListening() {
         if (_isRecording.value || !hasRecordPermission()) return
 
-        val minBufferSize = AudioRecord.getMinBufferSize(
-            sampleRate,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
-        )
-
         try {
+            val minBufferSize = AudioRecord.getMinBufferSize(
+                sampleRate,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT
+            )
+
+            val bufferSize = if (minBufferSize > 0) {
+                max(minBufferSize * 2, 4096)
+            } else {
+                4096
+            }
+
             audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
-                max(minBufferSize, 2048)
+                bufferSize
             )
 
             if (audioRecord?.state != AudioRecord.STATE_INITIALIZED) {

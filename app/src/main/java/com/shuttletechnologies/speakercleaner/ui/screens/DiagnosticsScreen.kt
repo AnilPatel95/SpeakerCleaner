@@ -115,7 +115,9 @@ fun DiagnosticsScreen(
     ) { granted ->
         hasMicPermission = granted
         if (granted) {
-            soundMeter.startListening()
+            try {
+                soundMeter.startListening()
+            } catch (_: Throwable) {}
         }
     }
 
@@ -338,7 +340,11 @@ fun DiagnosticsScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
-                    onClick = { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO) },
+                    onClick = {
+                        try {
+                            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                        } catch (_: Throwable) {}
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
