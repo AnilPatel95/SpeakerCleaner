@@ -10,16 +10,20 @@ class SpeakerCleanerApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Ensure Firebase is initialized
-        FirebaseApp.initializeApp(this)
+        // Ensure Firebase is initialized safely
+        try {
+            FirebaseApp.initializeApp(this)
+        } catch (_: Throwable) {}
 
-        // Configure Firebase Crashlytics
-        val crashlytics = FirebaseCrashlytics.getInstance()
-        crashlytics.setCrashlyticsCollectionEnabled(true)
-        crashlytics.setCustomKey("version_code", BuildConfig.VERSION_CODE)
-        crashlytics.setCustomKey("version_name", BuildConfig.VERSION_NAME)
-        crashlytics.setCustomKey("build_type", if (BuildConfig.DEBUG) "debug" else "release")
-        crashlytics.log("SpeakerCleanerApp initialized")
+        // Configure Firebase Crashlytics safely
+        try {
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.setCrashlyticsCollectionEnabled(true)
+            crashlytics.setCustomKey("version_code", BuildConfig.VERSION_CODE)
+            crashlytics.setCustomKey("version_name", BuildConfig.VERSION_NAME)
+            crashlytics.setCustomKey("build_type", if (BuildConfig.DEBUG) "debug" else "release")
+            crashlytics.log("SpeakerCleanerApp initialized")
+        } catch (_: Throwable) {}
 
         // Initialize Google Mobile Ads SDK on background thread
         MobileAds.initialize(this) {}
