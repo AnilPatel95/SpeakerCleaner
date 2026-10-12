@@ -28,7 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 import com.shuttletechnologies.speakercleaner.audio.AcousticSynthEngine
 import com.shuttletechnologies.speakercleaner.audio.AudioOutputRouter
 import com.shuttletechnologies.speakercleaner.audio.HapticPulseManager
@@ -48,7 +48,7 @@ import com.shuttletechnologies.speakercleaner.ui.screens.ManualToneScreen
 import com.shuttletechnologies.speakercleaner.ui.screens.SettingsScreen
 import com.shuttletechnologies.speakercleaner.ui.screens.WaterEjectScreen
 
-class MainActivity : FragmentActivity() {
+class MainActivity : ComponentActivity() {
 
     private lateinit var prefs: PreferencesManager
     private lateinit var synthEngine: AcousticSynthEngine
