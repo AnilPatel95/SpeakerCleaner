@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -134,31 +135,43 @@ fun AcousticGauge(
 
         // Central Content
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(horizontal = 24.dp)
         ) {
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(colors.accent.copy(alpha = 0.12f))
-                    .padding(8.dp)
+                    .padding(6.dp)
             ) {
-                AppLogo(size = 38.dp)
+                AppLogo(size = 32.dp)
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = "${frequency.toInt()} Hz",
-                fontSize = 24.sp,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = colors.textPrimary
+                color = colors.textPrimary,
+                maxLines = 1,
+                softWrap = false,
+                style = androidx.compose.ui.text.TextStyle(
+                    fontFeatureSettings = "tnum"
+                )
             )
 
             Text(
                 text = "${(progress * 100).toInt()}%",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = colors.accent
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = colors.accent,
+                maxLines = 1,
+                softWrap = false,
+                style = androidx.compose.ui.text.TextStyle(
+                    fontFeatureSettings = "tnum"
+                )
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -174,7 +187,8 @@ fun AcousticGauge(
                     text = phaseText,
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Medium,
-                    color = colors.textMuted
+                    color = colors.textMuted,
+                    maxLines = 1
                 )
             }
         }

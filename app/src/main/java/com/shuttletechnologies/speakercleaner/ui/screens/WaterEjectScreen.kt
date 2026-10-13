@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Air
 import androidx.compose.material.icons.rounded.Bolt
@@ -625,12 +627,12 @@ private fun ModeChip(
 
     Column(
         modifier = modifier
-            .height(72.dp)
+            .defaultMinSize(minHeight = 72.dp)
             .clip(RoundedCornerShape(14.dp))
             .background(bgColor)
             .border(if (isSelected) 1.5.dp else 1.dp, borderColor, RoundedCornerShape(14.dp))
             .clickable(onClick = onClick)
-            .padding(6.dp),
+            .padding(horizontal = 4.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -640,19 +642,23 @@ private fun ModeChip(
             tint = if (isSelected) colors.accent else colors.textMuted,
             modifier = Modifier.size(20.dp)
         )
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(3.dp))
         Text(
             text = title,
             fontSize = 9.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             color = if (isSelected) colors.accent else colors.textPrimary,
-            maxLines = 1
+            maxLines = 2,
+            textAlign = TextAlign.Center,
+            lineHeight = 11.sp
         )
+        Spacer(modifier = Modifier.height(1.dp))
         Text(
             text = duration,
             fontSize = 8.sp,
             fontWeight = FontWeight.Normal,
-            color = colors.textMuted
+            color = colors.textMuted,
+            textAlign = TextAlign.Center
         )
     }
 }
